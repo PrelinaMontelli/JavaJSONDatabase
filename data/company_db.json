@@ -1,0 +1,97 @@
+{
+  "name" : "company_db",
+  "tables" : {
+    "employees" : {
+      "name" : "employees",
+      "columns" : [ {
+        "name" : "emp_id",
+        "type" : "INTEGER"
+      }, {
+        "name" : "first_name",
+        "type" : "STRING"
+      }, {
+        "name" : "last_name",
+        "type" : "STRING"
+      }, {
+        "name" : "email",
+        "type" : "STRING"
+      }, {
+        "name" : "department_id",
+        "type" : "INTEGER"
+      }, {
+        "name" : "salary",
+        "type" : "DOUBLE"
+      }, {
+        "name" : "is_active",
+        "type" : "BOOLEAN"
+      } ],
+      "rows" : [ {
+        "emp_id" : 102,
+        "first_name" : "Bob",
+        "last_name" : "Johnson",
+        "email" : "bob.j@example.com",
+        "department_id" : 1,
+        "salary" : 75000.0,
+        "is_active" : true
+      }, {
+        "emp_id" : 103,
+        "first_name" : "Charlie",
+        "last_name" : "Brown",
+        "email" : "charlie.b@example.com",
+        "department_id" : 2,
+        "salary" : 65000.0,
+        "is_active" : true
+      }, {
+        "emp_id" : 104,
+        "first_name" : "Diana",
+        "last_name" : "Davis",
+        "email" : "diana.d@example.com",
+        "department_id" : 3,
+        "salary" : 60000.0,
+        "is_active" : false
+      }, {
+        "emp_id" : 105,
+        "first_name" : "Edward",
+        "last_name" : "Wilson",
+        "email" : "ed.wilson@example.com",
+        "department_id" : 1,
+        "salary" : 80000.0,
+        "is_active" : true
+      }, {
+        "emp_id" : 108,
+        "first_name" : "Hannah",
+        "last_name" : "Martinez",
+        "email" : "h.martinez@example.com",
+        "department_id" : 4,
+        "salary" : 72000.0,
+        "is_active" : true
+      } ]
+    },
+    "departments" : {
+      "name" : "departments",
+      "columns" : [ {
+        "name" : "id",
+        "type" : "INTEGER"
+      }, {
+        "name" : "name",
+        "type" : "STRING"
+      } ],
+      "rows" : [ {
+        "id" : 1,
+        "name" : "Engineering"
+      }, {
+        "id" : 2,
+        "name" : "Marketing"
+      }, {
+        "id" : 3,
+        "name" : "Human Resources"
+      }, {
+        "id" : 4,
+        "name" : "Sales"
+      }, {
+        "id" : 5,
+        "name" : "Operations, Client Side"
+      } ]
+    }
+  }
+}
