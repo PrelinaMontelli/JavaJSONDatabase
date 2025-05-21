@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class Column {
     private final String name;
-    private final DataType type; // 我们稍后会定义 DataType 枚举
+    private final DataType type;
 
     @JsonCreator
     public Column(@JsonProperty("name") String name, @JsonProperty("type") DataType type) {

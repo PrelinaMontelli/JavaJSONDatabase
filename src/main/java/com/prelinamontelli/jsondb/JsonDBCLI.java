@@ -711,13 +711,13 @@ public class JsonDBCLI {
     }
 
     public static void main(String[] args) {
-        // --- X.509 Self-Signature Check Start ---
-        String expectedCertThumbprint = "503fafd5e12830436b49b597b289b8638db18d6d79fa302e631f7ca6f3b51394"; 
+        // --- 代码自签检查 ---
+        String expectedCertThumbprint = "503fafd5e12830436b49b597b289b8638db18d6d79fa302e631f7ca6f3b51394";  // 代码签名指纹，SHA-256，按需替换
         boolean signatureVerified = false;
-        String signatureMessage = "";
+        String signatureMessage = ""; // 将由本地化服务设置
 
-        LocalizationService earlyLocalizationService = new LocalizationService();
-        String compilationTime = earlyLocalizationService.getMessage("compilation_time_unknown"); // Default
+        LocalizationService earlyLocalizationService = new LocalizationService(); // 用于启动时的消息
+        String compilationTime = earlyLocalizationService.getMessage("compilation_time_unknown"); // 默认值
 
         try {
             URI codeSourceUri = JsonDBCLI.class.getProtectionDomain().getCodeSource().getLocation().toURI();
@@ -731,19 +731,24 @@ public class JsonDBCLI {
                 }
                 
                 try (JarFile currentJar = new JarFile(jarFile)) {
+                    // 我们需要验证至少一个已签名的条目。清单文件（MANIFEST.MF）通常是已签名的。
                     JarEntry manifestEntry = currentJar.getJarEntry("META-INF/MANIFEST.MF");
                     if (manifestEntry == null) {
+                        // 后备方案：如果找不到清单文件（对于典型的已签名JAR不应发生此情况），尝试验证类文件。
                         String classFileEntryName = JsonDBCLI.class.getName().replace('.', '/') + ".class";
                         manifestEntry = currentJar.getJarEntry(classFileEntryName);
                     }
 
                     if (manifestEntry != null) {
+                        // 读取条目内容是必要的，以使 JarFile 加载其签名者信息。
                         try (InputStream is = currentJar.getInputStream(manifestEntry)) {
                             byte[] buffer = new byte[8192];
-                            while (is.read(buffer, 0, buffer.length) != -1) { /* Just reading */ }
-                        }
+                            while (is.read(buffer, 0, buffer.length) != -1) { /* 仅读取以触发签名者加载 */ }
+                        } // InputStream 在此关闭
                         CodeSigner[] signers = manifestEntry.getCodeSigners();
                         if (signers != null && signers.length > 0) {
+                            // 假设第一个签名者是我们感兴趣的。
+                            // 在具有多个签名者的更复杂场景中，您可能需要迭代或识别正确的签名者。
                             X509Certificate signingCert = (X509Certificate) signers[0].getSignerCertPath().getCertificates().get(0);
                             MessageDigest md = MessageDigest.getInstance("SHA-256");
                             byte[] digest = md.digest(signingCert.getEncoded());
@@ -753,22 +758,23 @@ public class JsonDBCLI {
                             }
                         }
                     }
-                }
+                } // JarFile 在此关闭
             } else {
+                // 从IDE或独立的类文件运行（非JAR包），跳过签名检查。
                 System.out.println(earlyLocalizationService.getMessage("signature_check_skipped_ide"));
-                // If running from IDE, we might consider it verified or just use the default compilationTime.
-                // To avoid showing a "failed" message for IDE runs, one might set signatureVerified = true here,
-                // or have a dedicated message. For now, it will fall into the "failed" or "misconfigured" path based on thumbprint.
+                // 在这种情况下，如果您不希望出现警告，可以将 signatureVerified 视为 true 或不适用。
+                // 在本示例中，我们将其保留为 false，因此如果不是JAR包，它会显示"未验证"消息。
+                // 如果您希望将IDE执行视为"受信任的"，请在此处设置 signatureVerified = true。
             }
         } catch (Exception e) {
-            // Keep signatureVerified as false, compilationTime as potentially "unknown"
-            // System.err.println("Error during signature check: " + e.getMessage()); // For debugging
+            // 保持 signatureVerified 为 false，compilationTime 可能为 "unknown"
+            // System.err.println("签名检查期间发生错误: " + e.getMessage()); // 用于调试
         }
 
         if (signatureVerified) {
             signatureMessage = earlyLocalizationService.getMessage("signature_check_passed", compilationTime);
         } else {
-            // Check if the thumbprint is still the original placeholder, indicating misconfiguration
+            // 检查指纹是否仍为原始占位符，这表示配置错误
             if ("YOUR_CERTIFICATES_SHA256_THUMBPRINT_HERE".equalsIgnoreCase(expectedCertThumbprint)) { 
                  signatureMessage = earlyLocalizationService.getMessage("signature_check_misconfigured");
             } else {
@@ -776,7 +782,7 @@ public class JsonDBCLI {
             }
         }
         System.out.println(signatureMessage);
-        // --- X.509 Self-Signature Check End ---
+        // --- X.509 自签名检查结束 ---
 
         JsonDBCLI cli = new JsonDBCLI();
         cli.start();

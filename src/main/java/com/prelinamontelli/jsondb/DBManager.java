@@ -31,7 +31,7 @@ public class DBManager {
         this.dataDirectory = dataDirectory;
         this.databases = new ConcurrentHashMap<>();
         this.objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // Pretty print JSON
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // 美化JSON输出
         objectMapper.registerModule(new JavaTimeModule()); // 支持 Java 8 Date/Time API (如果以后用到)
         // objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY); // 如果需要序列化私有字段
 
@@ -146,7 +146,7 @@ public class DBManager {
     public Database ensureCurrentDatabaseSelected() {
         return getCurrentDatabase().orElseThrow(() -> 
             new IllegalStateException("No database selected. Use 'USE <database_name>;' first.")
-        );
+        ); // 辅助方法，供CLI/引擎获取当前数据库，如果不存在则抛出异常
     }
 
     // 可以在应用关闭时调用，确保所有更改都已保存

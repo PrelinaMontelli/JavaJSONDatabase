@@ -53,11 +53,10 @@ public class Row {
     }
 
     /**
-     * Updates an existing value in the row for a given column, performing validation and type conversion.
-     * @param column The column definition.
-     * @param newValue The new value to set.
-     * @throws IllegalArgumentException if the column doesn't exist in the row (should not happen if row is from table),
-     *                                or if the new value is invalid for the column type.
+     * 更新行中给定列的现有值，执行验证和类型转换。
+     * @param column 列定义。
+     * @param newValue 要设置的新值。
+     * @throws IllegalArgumentException 如果列在行中不存在（如果行来自表，则不应发生此情况），或者新值对于列类型无效。
      */
     public void updateValue(Column column, Object newValue) {
         if (column == null) {
