@@ -32,6 +32,10 @@ Prelina JsonDB 是一个基于 Java 实现的轻量级命令行 JSON 数据库�
 
 ## 如何自行编译 (How to Compile It Yourself)
 
+
+推荐您使用macOS，因为在macOS上配置会很简单。
+
+
 如果您希望从源代码自行编译项目，请按以下步骤操作：
 
 ### 先决条件 (Prerequisites)
